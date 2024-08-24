@@ -2,6 +2,11 @@
 @import 'fonts';
 @import 'shortcuts';
 @import 'keyframes';
+@import 'hamburgers';
+
+html {
+    scrollbar-gutter: stable;
+}
 
 p {
     margin: 0;
@@ -22,14 +27,16 @@ ul {
 .router-link-active {
     color: #1f2229;
 
-    &::after {
-        position:         absolute;
-        content:          '';
-        bottom:           0;
-        left:             0;
-        width:            100%;
-        height:           2px;
-        background-color: #1f2229;
+    &:not(.mobile) {
+        &::after {
+            position:         absolute;
+            content:          '';
+            bottom:           0;
+            left:             0;
+            width:            100%;
+            height:           2px;
+            background-color: #1f2229;
+        }
     }
 }
 
@@ -51,14 +58,22 @@ ul {
     line-height: 1.28571;
     color:       #7c8792;
 
+    position:    relative;
+    z-index:     10;
+
     &-location {
         @extend .row, .items-center, .pointer;
         margin-right: 32px;
+
+        @media (max-width: 875px) {
+            display: none;
+        }
     }
 
     &-notification {
         @extend .pointer;
         position: relative;
+        top:      1px;
 
         &__point {
             position:         absolute;
@@ -79,6 +94,7 @@ ul {
 
 
 .navigation {
+    padding: 0 10px;
 
     &-list {
         @extend .row, .items-center;
@@ -97,6 +113,71 @@ ul {
                 height:         100%;
                 padding-bottom: 12px;
             }
+        }
+    }
+
+    @media (max-width: 875px) {
+        display: none;
+    }
+}
+
+.hamburger {
+    margin-left: 16px;
+    @media (min-width: 876px) {
+        display: none;
+    }
+}
+
+.mobile-header {
+    height:           calc(100vh - 40px);
+    min-height:       605px;
+    background-color: white;
+
+    &__content {
+        @extend .row, .justify-between;
+        flex-direction: column;
+        height:         100%;
+    }
+
+    .mobile-navigation__list {
+        @extend .row;
+        padding:         24px 15px;
+        flex-direction:  column;
+        align-items:     flex-start;
+        justify-content: flex-start;
+    }
+
+    .mobile-list__item {
+        @extend .navigation-list__item;
+
+        padding:       16px 0;
+        width:         100%;
+        border-bottom: 1px solid #ededed;
+
+        a {
+            font-weight: 700;
+            font-size:   16px;
+            line-height: 1.375;
+        }
+    }
+
+    &__location {
+        @extend .row, .items-center;
+        width:       100%;
+        padding:     16px 15px;
+
+        font-weight: 400;
+        font-size:   16px;
+        line-height: 1.375;
+        color:       #959597;
+        background:  #f3f5f6;
+
+        img {
+            width:        24px;
+            height:       24px;
+            margin-right: 4px;
+            position:     relative;
+            top:          -2px;
         }
     }
 }

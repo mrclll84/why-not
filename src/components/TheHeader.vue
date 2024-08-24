@@ -36,6 +36,17 @@
                         
                         <div class="header-notification__point"></div>
                     </div>
+
+                    <button
+                        class="hamburger hamburger--3dx"
+                        :class="menuState ? 'is-active' : ''"
+                        type="button"
+                        @click="changeState"
+                    >
+                        <span class="hamburger-box">
+                            <span class="hamburger-inner"></span>
+                        </span>
+                    </button>
                 </div>
             </div>
         </div>
@@ -44,33 +55,93 @@
     <nav class="navigation">
         <div class="container">
             <ul class="navigation-list">
-                <li class="navigation-list__item">
-                    <router-link :to="{ name: 'main' }">Преимущества Tele2</router-link>
-                </li>
-                <li class="navigation-list__item">
-                    <router-link :to="{ name: 'plan' }">Тарифы</router-link>
-                </li>
-                <li class="navigation-list__item">
-                    <router-link :to="{ name: 'sales' }">Акции и спецпредложения</router-link>
-                </li>
-                <li class="navigation-list__item">
-                    <router-link :to="{ name: 'promo' }">Промотариф Tele2</router-link>
-                </li>
-                <li class="navigation-list__item">
-                    <router-link :to="{ name: 'technologies' }">Технология eSIM</router-link>
-                </li>
-                <li class="navigation-list__item">
-                    <router-link :to="{ name: 'connect' }">Подключение нового абонента</router-link>
+                <li
+                    v-for="(link, index) in links"
+                    :key="index"
+                    class="navigation-list__item"
+                >
+                    <router-link
+                        :to="{ name: link.to }"
+                    >
+                        {{ link.label }}
+                    </router-link>
                 </li>
             </ul>
         </div>
     </nav>
+    
+    <TransitionDefault>
+        <div
+            v-if="menuState"
+            class="mobile-header"
+        >
+            <div class="mobile-header__content">
+                <ul class="mobile-navigation__list">
+                    <li
+                        v-for="(link, index) in links"
+                        :key="index"
+                        class="mobile-list__item"
+                    >
+                        <router-link
+                            :to="{ name: link.to }"
+                            class="mobile"
+                        >
+                            {{ link.label }}
+                        </router-link>
+                    </li>
+                </ul>
+                
+                <div class="mobile-header__location">
+                    <img src="public/icons/Location.svg" alt="Местоположение">
+                    
+                    <p>Москва и область</p>
+                </div>
+            </div>
+
+        </div>
+    </TransitionDefault>
+
 </template>
 
 <script setup>
+import { computed, ref } from 'vue';
+import { useMenuStore } from "@/stores/menu.js";
+import { router } from '@/router/index.js';
+import TransitionDefault from "@/components/TransitionDefault.vue";
+
+const menuStore = useMenuStore();
+
+const links = ref([
+    { label: 'Преимущества Tele2', to: 'main' },
+    { label: 'Тарифы', to: 'plan' },
+    { label: 'Акции и спецпредложения', to: 'sales' },
+    { label: 'Промотариф Tele2', to: 'promo' },
+    { label: 'Технология eSIM', to: 'technologies' },
+    { label: 'Подключение нового абонента', to: 'connect' },
+])
+
+const changeState = () => {
+    const state = menuStore.getMenuState
+    const body  = document.querySelector('body');
+    
+    menuStore.changeMenuState(!state)
+    
+    if (!state) {
+        body.style.overflow = 'hidden'
+    }
+    else {
+        body.style.overflow = ''
+    }
+}
+
+const menuState = computed(() => menuStore.getMenuState);
+
+
+router.beforeEach((to, from, next) => {
+    const body = document.querySelector('body');
+    body.style.overflow = ''
+    menuStore.changeMenuState(false)
+    next();
+});
 
 </script>
-
-<style scoped>
-
-</style>

@@ -1,4 +1,4 @@
-import { createMemoryHistory, createRouter } from 'vue-router'
+import { createWebHistory, createRouter } from 'vue-router'
 import AdvantagesTele2 from '@/pages/AdvantagesTele2.vue';
 import Plans from '@/pages/Plans.vue';
 import Sales from '@/pages/Sales.vue';
@@ -18,6 +18,6 @@ const routes = [
 ]
 
 export const router = createRouter({
-    history: createMemoryHistory(),
+    history: createWebHistory(),
     routes,
 })
